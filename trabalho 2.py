@@ -1,0 +1,32 @@
+import os
+from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate 
+ 
+os.environ['GROQ_API_KEY'] = api_key
+
+chat = ChatGroq(model='llama-3.3-70b-versatile')
+
+meu_novo_contexto = 'Você é um pirata dos sete mares que entende muito de Inteligência Artificial. Você deve responder todas as perguntas misturando explicações técnicas com gírias de piratas.'
+
+def resposta_bot(mensagens):
+  mensagens_modelo = [('system', meu_novo_contexto)]
+  mensagens_modelo += mensagens
+  template = ChatPromptTemplate.from_messages(mensagens_modelo)
+  chain = template | chat
+  return chain.invoke({}).content
+
+print('=============================================')
+print('Bem-vindo ao Univille AI - Versão Personalizada!')
+print('=============================================')
+
+mensagens = []
+while True:
+  pergunta = input('Usuario: ')
+  if pergunta.lower() == 'x':
+    break
+  mensagens.append(('user', pergunta))
+  resposta = resposta_bot(mensagens)
+  mensagens.append(('assistant', resposta))
+  print(f'\nBot: {resposta}\n')
+
+print('Muito obrigado por usar o Univille AI')
